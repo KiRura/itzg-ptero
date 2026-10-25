@@ -1,0 +1,2455 @@
+{
+    "_comment": "DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PTERODACTYL PANEL - PTERODACTYL.IO",
+    "meta": {
+        "version": "PTDL_v2",
+        "update_url": null
+    },
+    "exported_at": "2026-10-25T13:48:40+00:00",
+    "name": "Minecraft (itzg/minecraft-server)",
+    "author": "kirura@kirura.f5.si",
+    "description": "itzg/minecraft-server をラッパーイメージ経由で動かす egg。itzg の環境変数を Panel から指定できる。",
+    "features": null,
+    "docker_images": {
+        "itzg wrapper (latest)": "ghcr.io/KiRura/itzg-ptero:latest",
+        "itzg wrapper (java21)": "ghcr.io/KiRura/itzg-ptero:java21",
+        "itzg wrapper (java17)": "ghcr.io/KiRura/itzg-ptero:java17",
+        "itzg wrapper (java8)": "ghcr.io/KiRura/itzg-ptero:java8"
+    },
+    "file_denylist": [],
+    "startup": "/pterodactyl-entrypoint.sh",
+    "config": {
+        "files": "{}",
+        "startup": "{\"done\": \")! For help, type \\\"help\\\"\"}",
+        "logs": "{}",
+        "stop": "stop"
+    },
+    "scripts": {
+        "installation": {
+            "script": "#!/bin/ash\n# itzg image installs the server at first start; nothing to do here.\nmkdir -p /mnt/server\n",
+            "container": "ghcr.io/pterodactyl/installers:alpine",
+            "entrypoint": "ash"
+        }
+    },
+    "variables": [
+        {
+            "name": "[基本] EULA",
+            "description": "Minecraft EULA への同意。TRUE で同意（必須）",
+            "env_variable": "EULA",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|in:TRUE,true",
+            "field_type": "text"
+        },
+        {
+            "name": "[基本] TYPE",
+            "description": "サーバー種別。VANILLA / PAPER / PURPUR / FOLIA / LEAF / PUFFERFISH / SPIGOT / BUKKIT / FABRIC / QUILT / FORGE / NEOFORGE / CUSTOM / MODRINTH / AUTO_CURSEFORGE / FTBA など（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "TYPE",
+            "default_value": "VANILLA",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[基本] VERSION",
+            "description": "Minecraft バージョン。LATEST / SNAPSHOT / 1.21.4 など (default: LATEST)（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "VERSION",
+            "default_value": "LATEST",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[基本] MOD_PLATFORM",
+            "description": "モッドパック基盤。AUTO_CURSEFORGE / MODRINTH など（TYPE の代わりに指定可）（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "MOD_PLATFORM",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[基本] MOTD",
+            "description": "サーバー一覧に出るメッセージ。改行は \\n。未設定なら種別とバージョンから自動生成（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "MOTD",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[基本] DIFFICULTY",
+            "description": "難易度 (default: easy)（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "DIFFICULTY",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:peaceful,easy,normal,hard,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[基本] MODE",
+            "description": "ゲームモード。creative / survival / adventure / spectator または数値（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "MODE",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[基本] HARDCORE",
+            "description": "ハードコア (default: false)（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "HARDCORE",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:true,false,TRUE,FALSE,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[基本] LEVEL",
+            "description": "ワールド名 level-name (default: world)（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "LEVEL",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[基本] ICON",
+            "description": "サーバーアイコンの URL またはコンテナ内パス。自動で縮小・変換される（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "ICON",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[基本] OVERRIDE_ICON",
+            "description": "既存の server-icon.png を上書きする (default: FALSE)（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "OVERRIDE_ICON",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:true,false,TRUE,FALSE,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[基本] CUSTOM_SERVER",
+            "description": "カスタム JAR の URL またはパス。TYPE=CUSTOM が必要（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "CUSTOM_SERVER",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[基本] FORCE_REDOWNLOAD",
+            "description": "サーバー JAR を強制再ダウンロード (default: false)（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "FORCE_REDOWNLOAD",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:true,false,TRUE,FALSE,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[基本] WORLD",
+            "description": "ワールドデータ(zip 等)の URL またはパス。起動時に展開される（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "WORLD",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[基本] SETUP_ONLY",
+            "description": "セットアップだけ行いサーバーを起動しない (default: false)（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "SETUP_ONLY",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:true,false,TRUE,FALSE,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[基本] PRE_START_SCRIPT",
+            "description": "サーバー起動直前に実行するスクリプトのパス。非0終了で起動中止（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "PRE_START_SCRIPT",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[基本] EXTRA_ARGS",
+            "description": "JAR 名の後ろに渡す引数（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "EXTRA_ARGS",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[基本] CONSOLE",
+            "description": "--nogui 相当のコンソール設定 (default: TRUE)（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "CONSOLE",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:true,false,TRUE,FALSE,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[基本] GUI",
+            "description": "GUI の有効/無効 (default: TRUE)（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "GUI",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:true,false,TRUE,FALSE,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[基本] PROXY",
+            "description": "HTTP/HTTPS プロキシの URL（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "PROXY",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[基本] STOP_DURATION",
+            "description": "停止シグナル後にサーバーの正常終了を待つ秒数 (default: 60)（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "STOP_DURATION",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[基本] STOP_SERVER_ANNOUNCE_DELAY",
+            "description": "停止前にアナウンスしてから待つ秒数（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "STOP_SERVER_ANNOUNCE_DELAY",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[基本] STOP_SERVER_DELAY_COMMAND",
+            "description": "停止前の待機開始時に実行するコマンド（アナウンスの代わり）（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "STOP_SERVER_DELAY_COMMAND",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[JVM/ログ] MEMORY",
+            "description": "ヒープサイズ。例 4G。未設定なら Panel のメモリ制限の85%を自動設定 (image既定は1G)（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "MEMORY",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[JVM/ログ] INIT_MEMORY",
+            "description": "初期ヒープサイズのみ個別指定（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "INIT_MEMORY",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[JVM/ログ] MAX_MEMORY",
+            "description": "最大ヒープサイズのみ個別指定（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "MAX_MEMORY",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[JVM/ログ] TZ",
+            "description": "タイムゾーン。例 Asia/Tokyo（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "TZ",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[JVM/ログ] USE_AIKAR_FLAGS",
+            "description": "Aikar の GC チューニングフラグ (default: false)（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "USE_AIKAR_FLAGS",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:true,false,TRUE,FALSE,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[JVM/ログ] USE_MEOWICE_FLAGS",
+            "description": "MeowIce の JVM フラグ(Java17+向け) (default: false)（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "USE_MEOWICE_FLAGS",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:true,false,TRUE,FALSE,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[JVM/ログ] USE_MEOWICE_GRAALVM_FLAGS",
+            "description": "GraalVM 向け MeowIce フラグ (default: true)（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "USE_MEOWICE_GRAALVM_FLAGS",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:true,false,TRUE,FALSE,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[JVM/ログ] USE_FLARE_FLAGS",
+            "description": "Flare プロファイラ用フラグ（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "USE_FLARE_FLAGS",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:true,false,TRUE,FALSE,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[JVM/ログ] USE_SIMD_FLAGS",
+            "description": "SIMD 最適化フラグ (default: false)（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "USE_SIMD_FLAGS",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:true,false,TRUE,FALSE,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[JVM/ログ] JVM_OPTS",
+            "description": "汎用 JVM オプション（スペース区切り）（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "JVM_OPTS",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[JVM/ログ] JVM_XX_OPTS",
+            "description": "-XX 系 JVM オプション（スペース区切り。-X より前に置かれる）（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "JVM_XX_OPTS",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[JVM/ログ] JVM_DD_OPTS",
+            "description": "-D システムプロパティ。name=value をカンマ区切り（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "JVM_DD_OPTS",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[JVM/ログ] JAVA_AGENTS",
+            "description": "-javaagent で読む jar の URL/パス（カンマ区切り）（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "JAVA_AGENTS",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[JVM/ログ] JVM_AGENTS",
+            "description": "-agentpath で読むネイティブエージェント（カンマ区切り）（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "JVM_AGENTS",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[JVM/ログ] ENABLE_JMX",
+            "description": "リモート JMX を有効化 (default: false)（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "ENABLE_JMX",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:true,false,TRUE,FALSE,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[JVM/ログ] JMX_HOST",
+            "description": "JMX_HOST。JMX 有効時に指定（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "JMX_HOST",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[JVM/ログ] LOG_LEVEL",
+            "description": "ルートロガーのレベル (default: info)（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "LOG_LEVEL",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:trace,debug,info,warn,error,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[JVM/ログ] LOG_CONSOLE_FORMAT",
+            "description": "コンソール出力の Log4j2 パターン（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "LOG_CONSOLE_FORMAT",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[JVM/ログ] LOG_FILE_FORMAT",
+            "description": "logs/latest.log の Log4j2 パターン（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "LOG_FILE_FORMAT",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[JVM/ログ] LOG_TERMINAL_FORMAT",
+            "description": "docker attach 用ターミナルの Log4j2 パターン（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "LOG_TERMINAL_FORMAT",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[JVM/ログ] ROLLING_LOG_FILE_PATTERN",
+            "description": "ローテートされたログのファイル名パターン（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "ROLLING_LOG_FILE_PATTERN",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[JVM/ログ] ROLLING_LOG_MAX_FILES",
+            "description": "保持するログファイル数 (default: 1000)（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "ROLLING_LOG_MAX_FILES",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[JVM/ログ] ENABLE_ROLLING_LOGS",
+            "description": "（レガシー）(default: false)（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "ENABLE_ROLLING_LOGS",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:true,false,TRUE,FALSE,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[JVM/ログ] LOG_TIMESTAMP",
+            "description": "各ログにタイムスタンプを付与 (default: false)（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "LOG_TIMESTAMP",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:true,false,TRUE,FALSE,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[server.properties] SEED",
+            "description": "level-seed。負数もそのまま入力可（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "SEED",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[server.properties] LEVEL_TYPE",
+            "description": "level-type。例 minecraft:normal / minecraft:flat / minecraft:large_biomes（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "LEVEL_TYPE",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[server.properties] GENERATOR_SETTINGS",
+            "description": "generator-settings (JSON)。FLAT 用レイヤー設定など（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "GENERATOR_SETTINGS",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[server.properties] ENABLE_QUERY",
+            "description": "GameSpy クエリを有効化（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "ENABLE_QUERY",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:true,false,TRUE,FALSE,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[server.properties] QUERY_PORT",
+            "description": "クエリポート (default: 25565/UDP)（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "QUERY_PORT",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[server.properties] CUSTOM_SERVER_PROPERTIES",
+            "description": "server.properties の追加項目。name=value を改行区切り（Panel 単行欄では \\n 記法は不可なので別途ファイル編集推奨）（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "CUSTOM_SERVER_PROPERTIES",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[server.properties] INITIAL_ENABLED_PACKS",
+            "description": "初回ワールド生成時に有効にするデータパック（カンマ区切り）（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "INITIAL_ENABLED_PACKS",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[server.properties] INITIAL_DISABLED_PACKS",
+            "description": "初回ワールド生成時に無効にするデータパック（カンマ区切り）（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "INITIAL_DISABLED_PACKS",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[server.properties] OVERRIDE_SERVER_PROPERTIES",
+            "description": "env から server.properties を毎回上書きする。false で手動管理（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "OVERRIDE_SERVER_PROPERTIES",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:true,false,TRUE,FALSE,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[server.properties] SKIP_SERVER_PROPERTIES",
+            "description": "server.properties の生成処理を完全にスキップ（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "SKIP_SERVER_PROPERTIES",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:true,false,TRUE,FALSE,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[server.properties] DUMP_SERVER_PROPERTIES",
+            "description": "起動前に server.properties の内容をログ出力（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "DUMP_SERVER_PROPERTIES",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:true,false,TRUE,FALSE,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[server.properties] SERVER_PROPERTIES_ESCAPE_UNICODE",
+            "description": "1.20未満での Unicode エスケープ制御（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "SERVER_PROPERTIES_ESCAPE_UNICODE",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:true,false,TRUE,FALSE,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[server.properties] SERVER_PROPERTIES_REPO_URL",
+            "description": "ベース server.properties の取得元 URL（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "SERVER_PROPERTIES_REPO_URL",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[server.properties] ACCEPTS_TRANSFERS",
+            "description": "accepts-transfers（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "ACCEPTS_TRANSFERS",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:true,false,TRUE,FALSE,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[server.properties] ALLOW_FLIGHT",
+            "description": "allow-flight（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "ALLOW_FLIGHT",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:true,false,TRUE,FALSE,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[server.properties] ALLOW_NETHER",
+            "description": "allow-nether（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "ALLOW_NETHER",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:true,false,TRUE,FALSE,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[server.properties] ANNOUNCE_PLAYER_ACHIEVEMENTS",
+            "description": "announce-player-achievements（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "ANNOUNCE_PLAYER_ACHIEVEMENTS",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:true,false,TRUE,FALSE,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[server.properties] BROADCAST_CONSOLE_TO_OPS",
+            "description": "broadcast-console-to-ops（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "BROADCAST_CONSOLE_TO_OPS",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:true,false,TRUE,FALSE,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[server.properties] BROADCAST_RCON_TO_OPS",
+            "description": "broadcast-rcon-to-ops (default: false)（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "BROADCAST_RCON_TO_OPS",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:true,false,TRUE,FALSE,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[server.properties] BUG_REPORT_LINK",
+            "description": "bug-report-link（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "BUG_REPORT_LINK",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[server.properties] ENABLE_COMMAND_BLOCK",
+            "description": "enable-command-block（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "ENABLE_COMMAND_BLOCK",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:true,false,TRUE,FALSE,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[server.properties] ENABLE_STATUS",
+            "description": "enable-status（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "ENABLE_STATUS",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:true,false,TRUE,FALSE,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[server.properties] ENFORCE_SECURE_PROFILE",
+            "description": "enforce-secure-profile（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "ENFORCE_SECURE_PROFILE",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:true,false,TRUE,FALSE,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[server.properties] ENTITY_BROADCAST_RANGE_PERCENTAGE",
+            "description": "entity-broadcast-range-percentage（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "ENTITY_BROADCAST_RANGE_PERCENTAGE",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[server.properties] FORCE_GAMEMODE",
+            "description": "force-gamemode（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "FORCE_GAMEMODE",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:true,false,TRUE,FALSE,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[server.properties] FUNCTION_PERMISSION_LEVEL",
+            "description": "function-permission-level（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "FUNCTION_PERMISSION_LEVEL",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[server.properties] GENERATE_STRUCTURES",
+            "description": "generate-structures（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "GENERATE_STRUCTURES",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:true,false,TRUE,FALSE,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[server.properties] HIDE_ONLINE_PLAYERS",
+            "description": "hide-online-players（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "HIDE_ONLINE_PLAYERS",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:true,false,TRUE,FALSE,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[server.properties] LOG_IPS",
+            "description": "log-ips（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "LOG_IPS",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:true,false,TRUE,FALSE,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[server.properties] MANAGEMENT_SERVER_ALLOWED_ORIGINS",
+            "description": "management-server-allowed-origins（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "MANAGEMENT_SERVER_ALLOWED_ORIGINS",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[server.properties] MANAGEMENT_SERVER_ENABLED",
+            "description": "management-server-enabled（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "MANAGEMENT_SERVER_ENABLED",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:true,false,TRUE,FALSE,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[server.properties] MANAGEMENT_SERVER_HOST",
+            "description": "management-server-host（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "MANAGEMENT_SERVER_HOST",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[server.properties] MANAGEMENT_SERVER_PORT",
+            "description": "management-server-port（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "MANAGEMENT_SERVER_PORT",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[server.properties] MANAGEMENT_SERVER_SECRET",
+            "description": "management-server-secret（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "MANAGEMENT_SERVER_SECRET",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[server.properties] MANAGEMENT_SERVER_TLS_ENABLED",
+            "description": "management-server-tls-enabled（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "MANAGEMENT_SERVER_TLS_ENABLED",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:true,false,TRUE,FALSE,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[server.properties] MANAGEMENT_SERVER_TLS_KEYSTORE",
+            "description": "management-server-tls-keystore（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "MANAGEMENT_SERVER_TLS_KEYSTORE",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[server.properties] MANAGEMENT_SERVER_TLS_KEYSTORE_PASSWORD",
+            "description": "management-server-tls-keystore-password（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "MANAGEMENT_SERVER_TLS_KEYSTORE_PASSWORD",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[server.properties] MAX_BUILD_HEIGHT",
+            "description": "max-build-height（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "MAX_BUILD_HEIGHT",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[server.properties] MAX_COMMAND_CHAIN_LENGTH",
+            "description": "max-command-chain-length（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "MAX_COMMAND_CHAIN_LENGTH",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[server.properties] MAX_ENTITY_CRAMMING",
+            "description": "max-entity-cramming（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "MAX_ENTITY_CRAMMING",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[server.properties] MAX_ENTITY_COLLISION_RADIUS",
+            "description": "max-entity-collision-radius（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "MAX_ENTITY_COLLISION_RADIUS",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[server.properties] MAX_FUNCTION_CHAIN_DEPTH",
+            "description": "max-function-chain-depth（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "MAX_FUNCTION_CHAIN_DEPTH",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[server.properties] MAX_NEIGHBORS",
+            "description": "max-neighbors（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "MAX_NEIGHBORS",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[server.properties] MAX_CHAINED_NEIGHBOR_UPDATES",
+            "description": "max-chained-neighbor-updates（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "MAX_CHAINED_NEIGHBOR_UPDATES",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[server.properties] MAX_PLAYERS",
+            "description": "max-players（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "MAX_PLAYERS",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[server.properties] MAX_TICK_TIME",
+            "description": "max-tick-time（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "MAX_TICK_TIME",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[server.properties] MAX_WORLD_SIZE",
+            "description": "max-world-size（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "MAX_WORLD_SIZE",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[server.properties] NETWORK_COMPRESSION_THRESHOLD",
+            "description": "network-compression-threshold（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "NETWORK_COMPRESSION_THRESHOLD",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[server.properties] ONLINE_MODE",
+            "description": "online-mode（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "ONLINE_MODE",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:true,false,TRUE,FALSE,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[server.properties] OP_PERMISSION_LEVEL",
+            "description": "op-permission-level（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "OP_PERMISSION_LEVEL",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[server.properties] PAUSE_WHEN_EMPTY_SECONDS",
+            "description": "pause-when-empty-seconds（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "PAUSE_WHEN_EMPTY_SECONDS",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[server.properties] PLAYER_IDLE_TIMEOUT",
+            "description": "player-idle-timeout（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "PLAYER_IDLE_TIMEOUT",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[server.properties] PREVENT_PROXY_CONNECTIONS",
+            "description": "prevent-proxy-connections（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "PREVENT_PROXY_CONNECTIONS",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:true,false,TRUE,FALSE,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[server.properties] PVP",
+            "description": "pvp（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "PVP",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:true,false,TRUE,FALSE,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[server.properties] RATE_LIMIT",
+            "description": "rate-limit（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "RATE_LIMIT",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[server.properties] REGION_FILE_COMPRESSION",
+            "description": "region-file-compression（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "REGION_FILE_COMPRESSION",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[server.properties] SERVER_NAME",
+            "description": "server-name（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "SERVER_NAME",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[server.properties] SIMULATION_DISTANCE",
+            "description": "simulation-distance（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "SIMULATION_DISTANCE",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[server.properties] SNOOPER_ENABLED",
+            "description": "snooper-enabled（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "SNOOPER_ENABLED",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:true,false,TRUE,FALSE,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[server.properties] SPAWN_ANIMALS",
+            "description": "spawn-animals（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "SPAWN_ANIMALS",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:true,false,TRUE,FALSE,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[server.properties] SPAWN_MONSTERS",
+            "description": "spawn-monsters（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "SPAWN_MONSTERS",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:true,false,TRUE,FALSE,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[server.properties] SPAWN_NPCS",
+            "description": "spawn-npcs（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "SPAWN_NPCS",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:true,false,TRUE,FALSE,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[server.properties] SPAWN_PROTECTION",
+            "description": "spawn-protection（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "SPAWN_PROTECTION",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[server.properties] STATUS_HEARTBEAT_INTERVAL",
+            "description": "status-heartbeat-interval（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "STATUS_HEARTBEAT_INTERVAL",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[server.properties] SYNC_CHUNK_WRITES",
+            "description": "sync-chunk-writes（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "SYNC_CHUNK_WRITES",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:true,false,TRUE,FALSE,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[server.properties] USE_NATIVE_TRANSPORT",
+            "description": "use-native-transport（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "USE_NATIVE_TRANSPORT",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:true,false,TRUE,FALSE,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[server.properties] VIEW_DISTANCE",
+            "description": "view-distance（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "VIEW_DISTANCE",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[リソースパック] RESOURCE_PACK",
+            "description": "リソースパックの URL（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "RESOURCE_PACK",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[リソースパック] RESOURCE_PACK_SHA1",
+            "description": "リソースパックの SHA1（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "RESOURCE_PACK_SHA1",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[リソースパック] RESOURCE_PACK_ENFORCE",
+            "description": "クライアントに強制 (default: FALSE)（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "RESOURCE_PACK_ENFORCE",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:true,false,TRUE,FALSE,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[リソースパック] RESOURCE_PACK_ID",
+            "description": "resource-pack-id（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "RESOURCE_PACK_ID",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[リソースパック] RESOURCE_PACK_PROMPT",
+            "description": "resource-pack-prompt（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "RESOURCE_PACK_PROMPT",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[ホワイトリスト/OP] ENABLE_WHITELIST",
+            "description": "ホワイトリストを有効化（手動管理時） (default: false)（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "ENABLE_WHITELIST",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:true,false,TRUE,FALSE,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[ホワイトリスト/OP] ENFORCE_WHITELIST",
+            "description": "ホワイトリスト変更を即時反映（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "ENFORCE_WHITELIST",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:true,false,TRUE,FALSE,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[ホワイトリスト/OP] WHITELIST",
+            "description": "ユーザー名/UUID をカンマ区切り。指定すると whitelist が有効化される（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "WHITELIST",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[ホワイトリスト/OP] WHITELIST_FILE",
+            "description": "whitelist.json の URL またはパス（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "WHITELIST_FILE",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[ホワイトリスト/OP] EXISTING_WHITELIST_FILE",
+            "description": "既存ファイルがある時の挙動 (default: SYNC_FILE_MERGE_LIST)（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "EXISTING_WHITELIST_FILE",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:SKIP,SYNCHRONIZE,MERGE,SYNC_FILE_MERGE_LIST,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[ホワイトリスト/OP] OVERRIDE_WHITELIST",
+            "description": "（レガシー）起動毎に whitelist を再生成（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "OVERRIDE_WHITELIST",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:true,false,TRUE,FALSE,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[ホワイトリスト/OP] OPS",
+            "description": "OP にするユーザー名/UUID をカンマ区切り（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "OPS",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[ホワイトリスト/OP] OPS_FILE",
+            "description": "ops.json の URL またはパス（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "OPS_FILE",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[ホワイトリスト/OP] EXISTING_OPS_FILE",
+            "description": "既存ファイルがある時の挙動 (default: SYNC_FILE_MERGE_LIST)（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "EXISTING_OPS_FILE",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:SKIP,SYNCHRONIZE,MERGE,SYNC_FILE_MERGE_LIST,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[ホワイトリスト/OP] OVERRIDE_OPS",
+            "description": "（レガシー）起動毎に ops を再生成（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "OVERRIDE_OPS",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:true,false,TRUE,FALSE,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[ホワイトリスト/OP] USER_API_PROVIDER",
+            "description": "ユーザー名解決 API (default: playerdb)（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "USER_API_PROVIDER",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:playerdb,mojang,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[RCON] ENABLE_RCON",
+            "description": "RCON を有効化 (default: true)。無効化するとインタラクティブコンソール等が制限される（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "ENABLE_RCON",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:true,false,TRUE,FALSE,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[RCON] RCON_PASSWORD",
+            "description": "RCON パスワード。未設定なら起動毎にランダム生成（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "RCON_PASSWORD",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[RCON] RCON_PASSWORD_FILE",
+            "description": "パスワードを読み込むファイルのパス（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "RCON_PASSWORD_FILE",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[RCON] RCON_PORT",
+            "description": "RCON ポート (default: 25575)。変更は非推奨（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "RCON_PORT",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[RCON] RCON_CMDS_STARTUP",
+            "description": "サーバー起動時に実行する RCON コマンド（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "RCON_CMDS_STARTUP",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[RCON] RCON_CMDS_ON_CONNECT",
+            "description": "クライアント接続毎に実行する RCON コマンド（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "RCON_CMDS_ON_CONNECT",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[RCON] RCON_CMDS_FIRST_CONNECT",
+            "description": "最初の接続時に実行する RCON コマンド（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "RCON_CMDS_FIRST_CONNECT",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[RCON] RCON_CMDS_ON_DISCONNECT",
+            "description": "切断毎に実行する RCON コマンド（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "RCON_CMDS_ON_DISCONNECT",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[RCON] RCON_CMDS_LAST_DISCONNECT",
+            "description": "最後のクライアント切断時に実行する RCON コマンド（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "RCON_CMDS_LAST_DISCONNECT",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[Auto-Pause/Stop] ENABLE_AUTOPAUSE",
+            "description": "無人時にプロセスを一時停止 (default: FALSE)。※Pterodactyl では knockd に必要な権限が無く動かない可能性大（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "ENABLE_AUTOPAUSE",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:true,false,TRUE,FALSE,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[Auto-Pause/Stop] AUTOPAUSE_TIMEOUT_EST",
+            "description": "最後の切断から一時停止までの秒数 (default: 3600)（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "AUTOPAUSE_TIMEOUT_EST",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[Auto-Pause/Stop] AUTOPAUSE_TIMEOUT_INIT",
+            "description": "起動から一時停止までの秒数 (default: 600)（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "AUTOPAUSE_TIMEOUT_INIT",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[Auto-Pause/Stop] AUTOPAUSE_TIMEOUT_KN",
+            "description": "ノック検知から一時停止までの秒数 (default: 120)（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "AUTOPAUSE_TIMEOUT_KN",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[Auto-Pause/Stop] AUTOPAUSE_PERIOD",
+            "description": "状態マシンの周期 (default: 10)（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "AUTOPAUSE_PERIOD",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[Auto-Pause/Stop] AUTOPAUSE_KNOCK_INTERFACE",
+            "description": "knockd のインターフェース (default: eth0)（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "AUTOPAUSE_KNOCK_INTERFACE",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[Auto-Pause/Stop] DEBUG_AUTOPAUSE",
+            "description": "AutoPause のデバッグ出力（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "DEBUG_AUTOPAUSE",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:true,false,TRUE,FALSE,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[Auto-Pause/Stop] ENABLE_AUTOSTOP",
+            "description": "無人時にサーバーを停止 (default: FALSE)。Autopause とは併用不可（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "ENABLE_AUTOSTOP",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:true,false,TRUE,FALSE,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[Auto-Pause/Stop] AUTOSTOP_TIMEOUT_EST",
+            "description": "最後の切断から停止までの秒数 (default: 3600)（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "AUTOSTOP_TIMEOUT_EST",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[Auto-Pause/Stop] AUTOSTOP_TIMEOUT_INIT",
+            "description": "起動から停止までの秒数 (default: 1800)（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "AUTOSTOP_TIMEOUT_INIT",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[Auto-Pause/Stop] AUTOSTOP_PERIOD",
+            "description": "状態マシンの周期 (default: 10)（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "AUTOSTOP_PERIOD",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[Auto-Pause/Stop] DEBUG_AUTOSTOP",
+            "description": "AutoStop のデバッグ出力（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "DEBUG_AUTOSTOP",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:true,false,TRUE,FALSE,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[Paper系] PAPER_BUILD",
+            "description": "Paper のビルド番号（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "PAPER_BUILD",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[Paper系] PAPER_CHANNEL",
+            "description": "experimental で実験ビルドも対象に（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "PAPER_CHANNEL",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:default,experimental,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[Paper系] PAPER_DOWNLOAD_URL",
+            "description": "Paper を独自 URL から取得（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "PAPER_DOWNLOAD_URL",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[Paper系] PAPER_CONFIG_REPO",
+            "description": "paper-global.yml 等の設定リポジトリ URL（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "PAPER_CONFIG_REPO",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[Paper系] PUFFERFISH_BUILD",
+            "description": "Pufferfish のビルド (例 lastSuccessfulBuild)（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "PUFFERFISH_BUILD",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[Paper系] PUFFERFISH_CONFIG_REPO",
+            "description": "Pufferfish 設定リポジトリ URL（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "PUFFERFISH_CONFIG_REPO",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[Paper系] PURPUR_BUILD",
+            "description": "Purpur のビルド (例 LATEST)（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "PURPUR_BUILD",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[Paper系] PURPUR_DOWNLOAD_URL",
+            "description": "Purpur を独自 URL から取得（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "PURPUR_DOWNLOAD_URL",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[Paper系] PURPUR_CONFIG_REPO",
+            "description": "purpur.yml 等の設定リポジトリ URL（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "PURPUR_CONFIG_REPO",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[Paper系] LEAF_BUILD",
+            "description": "Leaf のビルド番号（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "LEAF_BUILD",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[Paper系] FOLIABUILD",
+            "description": "Folia のビルド番号（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "FOLIABUILD",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[Paper系] FOLIA_CHANNEL",
+            "description": "Folia のチャンネル（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "FOLIA_CHANNEL",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[Paper系] FOLIA_DOWNLOAD_URL",
+            "description": "Folia を独自 URL から取得（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "FOLIA_DOWNLOAD_URL",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[Paper系] SKIP_DOWNLOAD_DEFAULTS",
+            "description": "Paper/Bukkit/Spigot の既定設定ファイル取得をスキップ（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "SKIP_DOWNLOAD_DEFAULTS",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:true,false,TRUE,FALSE,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[Forge/Fabric] FORGE_VERSION",
+            "description": "Forge バージョン。latest または 14.23.5.2854 など（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "FORGE_VERSION",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[Forge/Fabric] FORGE_INSTALLER",
+            "description": "配置済み Forge インストーラのパス（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "FORGE_INSTALLER",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[Forge/Fabric] FORGE_INSTALLER_URL",
+            "description": "Forge インストーラの URL（Cleanroom 等にも使用）（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "FORGE_INSTALLER_URL",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[Forge/Fabric] FORGE_FORCE_REINSTALL",
+            "description": "Forge を再インストール（成功後は外すこと）（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "FORGE_FORCE_REINSTALL",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:true,false,TRUE,FALSE,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[Forge/Fabric] FORGE_PROMOTIONS_URL",
+            "description": "Forge promotions JSON の URL（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "FORGE_PROMOTIONS_URL",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[Forge/Fabric] FORGE_MAVEN_REPO_URL",
+            "description": "Forge Maven リポジトリの URL（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "FORGE_MAVEN_REPO_URL",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[Forge/Fabric] NEOFORGE_VERSION",
+            "description": "NeoForge バージョン。latest / beta / 具体的な版（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "NEOFORGE_VERSION",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[Forge/Fabric] APPLY_CLEANROOM",
+            "description": "Cleanroom をローダーとして適用 (1.12.2 のみ)（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "APPLY_CLEANROOM",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:true,false,TRUE,FALSE,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[Forge/Fabric] FABRIC_LOADER_VERSION",
+            "description": "Fabric loader のバージョン（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "FABRIC_LOADER_VERSION",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[Forge/Fabric] FABRIC_LAUNCHER_VERSION",
+            "description": "Fabric launcher のバージョン（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "FABRIC_LAUNCHER_VERSION",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[Forge/Fabric] FABRIC_META_BASE_URL",
+            "description": "Fabric meta API のベース URL（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "FABRIC_META_BASE_URL",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[Forge/Fabric] FABRIC_LAUNCHER",
+            "description": "カスタムランチャー jar のパス（データ直下からの相対）（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "FABRIC_LAUNCHER",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[Forge/Fabric] FABRIC_LAUNCHER_URL",
+            "description": "カスタムランチャー jar の URL（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "FABRIC_LAUNCHER_URL",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[Forge/Fabric] FABRIC_FORCE_REINSTALL",
+            "description": "Fabric ランチャーを再インストール（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "FABRIC_FORCE_REINSTALL",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:true,false,TRUE,FALSE,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[Mod/Plugin] MODS",
+            "description": "mod の jar URL/パスをカンマ区切り（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "MODS",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[Mod/Plugin] PLUGINS",
+            "description": "plugin の jar URL/パスをカンマ区切り（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "PLUGINS",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[Mod/Plugin] MODS_FILE",
+            "description": "mod の URL を1行ずつ書いたファイルのパス/URL（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "MODS_FILE",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[Mod/Plugin] PLUGINS_FILE",
+            "description": "plugin の URL を1行ずつ書いたファイルのパス/URL（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "PLUGINS_FILE",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[Mod/Plugin] MODPACK",
+            "description": "zip 形式モッドパックの URL/パス（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "MODPACK",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[Mod/Plugin] GENERIC_PACK",
+            "description": "サーバー内容一式を含む zip/tgz の URL/パス（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "GENERIC_PACK",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[Mod/Plugin] GENERIC_PACKS",
+            "description": "複数の generic pack（カンマ区切り。oci:// も可）（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "GENERIC_PACKS",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[Mod/Plugin] GENERIC_PACKS_PREFIX",
+            "description": "GENERIC_PACKS の各要素に付ける接頭辞（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "GENERIC_PACKS_PREFIX",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[Mod/Plugin] GENERIC_PACKS_SUFFIX",
+            "description": "GENERIC_PACKS の各要素に付ける接尾辞（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "GENERIC_PACKS_SUFFIX",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[Mod/Plugin] GENERIC_PACKS_DISABLE_MODS",
+            "description": "無効化する mod ファイル名（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "GENERIC_PACKS_DISABLE_MODS",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[Mod/Plugin] GENERIC_PACKS_OCI_AUTH_FILE",
+            "description": "OCI レジストリ認証ファイルのパス（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "GENERIC_PACKS_OCI_AUTH_FILE",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[Mod/Plugin] SKIP_GENERIC_PACK_UPDATE_CHECK",
+            "description": "generic pack の更新確認をスキップ（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "SKIP_GENERIC_PACK_UPDATE_CHECK",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:true,false,TRUE,FALSE,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[Mod/Plugin] FORCE_GENERIC_PACK_UPDATE",
+            "description": "generic pack を強制適用（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "FORCE_GENERIC_PACK_UPDATE",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:true,false,TRUE,FALSE,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[Mod/Plugin] SKIP_GENERIC_PACK_CHECKSUM",
+            "description": "チェックサム生成をスキップ（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "SKIP_GENERIC_PACK_CHECKSUM",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:true,false,TRUE,FALSE,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[Mod/Plugin] LOAD_ENV_FROM_GENERIC_PACK",
+            "description": "pack 内 .env から環境変数を読み込む（pack 側が優先）（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "LOAD_ENV_FROM_GENERIC_PACK",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:true,false,TRUE,FALSE,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[Mod/Plugin] LOAD_ENV_FROM_FILE",
+            "description": "env ファイルのパス/URL（シェルとして評価される。信頼できるものだけ）（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "LOAD_ENV_FROM_FILE",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[Mod/Plugin] LOAD_ENV_FROM_ARCHIVE",
+            "description": "env ファイルを含むアーカイブのパス/URL（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "LOAD_ENV_FROM_ARCHIVE",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[Mod/Plugin] LOAD_ENV_FROM_ARCHIVE_ENTRY",
+            "description": "アーカイブ内の env ファイルパス (default: .env)（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "LOAD_ENV_FROM_ARCHIVE_ENTRY",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[Mod/Plugin] APPLY_EXTRA_FILES",
+            "description": "追加ファイル取得。宛先<取得元 をカンマ区切り（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "APPLY_EXTRA_FILES",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[Mod/Plugin] USES_PLUGINS",
+            "description": "mod 系ローダーで plugin 機構も使う（Cardboard 等）（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "USES_PLUGINS",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:true,false,TRUE,FALSE,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[Mod/Plugin] REMOVE_OLD_MODS",
+            "description": "導入前に古い mods/plugins を削除（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "REMOVE_OLD_MODS",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:true,false,TRUE,FALSE,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[Mod/Plugin] REMOVE_OLD_MODS_INCLUDE",
+            "description": "削除対象の glob（カンマ区切り）（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "REMOVE_OLD_MODS_INCLUDE",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[Mod/Plugin] REMOVE_OLD_MODS_EXCLUDE",
+            "description": "削除除外の glob（カンマ区切り）（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "REMOVE_OLD_MODS_EXCLUDE",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[Mod/Plugin] REMOVE_OLD_MODS_DEPTH",
+            "description": "削除する階層の深さ (default: 16)（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "REMOVE_OLD_MODS_DEPTH",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[Mod/Plugin] REMOVE_OLD_CONFIGS",
+            "description": "モッドパック展開前に config を削除（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "REMOVE_OLD_CONFIGS",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:true,false,TRUE,FALSE,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[Mod/Plugin] REMOVE_OLD_CONFIGS_INCLUDE",
+            "description": "config 削除対象の glob（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "REMOVE_OLD_CONFIGS_INCLUDE",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[Mod/Plugin] REMOVE_OLD_CONFIGS_EXCLUDE",
+            "description": "config 削除除外の glob（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "REMOVE_OLD_CONFIGS_EXCLUDE",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[Mod/Plugin] REMOVE_OLD_CONFIGS_DEPTH",
+            "description": "config 削除の深さ (default: 16)（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "REMOVE_OLD_CONFIGS_DEPTH",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[Mod/Plugin] CONFIG_OUT_DIR",
+            "description": "config の出力先 (default: /data/config → ラッパーで /home/container/config)（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "CONFIG_OUT_DIR",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[Mod/Plugin] SYNC_SKIP_NEWER_IN_DESTINATION",
+            "description": "同期時に新しい宛先ファイルをスキップ（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "SYNC_SKIP_NEWER_IN_DESTINATION",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:true,false,TRUE,FALSE,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[Mod/Plugin] REPLACE_ENV_DURING_SYNC",
+            "description": "同期ファイル内の環境変数置換 (default: true)（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "REPLACE_ENV_DURING_SYNC",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:true,false,TRUE,FALSE,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[Mod/Plugin] REPLACE_ENV_SUFFIXES",
+            "description": "環境変数置換する拡張子（カンマ区切り）（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "REPLACE_ENV_SUFFIXES",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[Mod/Plugin] REPLACE_ENV_VARIABLES_EXCLUDES",
+            "description": "環境変数置換の除外ファイル名（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "REPLACE_ENV_VARIABLES_EXCLUDES",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[Mod/Plugin] REPLACE_ENV_VARIABLES_EXCLUDE_PATHS",
+            "description": "環境変数置換の除外パス（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "REPLACE_ENV_VARIABLES_EXCLUDE_PATHS",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[Spiget/Modrinth] SPIGET_RESOURCES",
+            "description": "Spigot リソース ID をカンマ区切り（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "SPIGET_RESOURCES",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[Spiget/Modrinth] MODRINTH_PROJECTS",
+            "description": "Modrinth プロジェクト（slug[:version|type]）をカンマ区切り。例 fabric-api,lithium,pl3xmap?（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "MODRINTH_PROJECTS",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[Spiget/Modrinth] VERSION_FROM_MODRINTH_PROJECTS",
+            "description": "全プロジェクトが対応する最新 MC バージョンを自動採用（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "VERSION_FROM_MODRINTH_PROJECTS",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:true,false,TRUE,FALSE,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[Spiget/Modrinth] MODRINTH_DOWNLOAD_DEPENDENCIES",
+            "description": "依存関係のダウンロード (default: none)（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "MODRINTH_DOWNLOAD_DEPENDENCIES",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:none,required,optional,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[Spiget/Modrinth] MODRINTH_PROJECTS_DEFAULT_VERSION_TYPE",
+            "description": "既定のバージョン種別 (default: release)（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "MODRINTH_PROJECTS_DEFAULT_VERSION_TYPE",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:release,beta,alpha,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[Spiget/Modrinth] MODRINTH_LOADER",
+            "description": "ローダー種別の指定 (forge/fabric/quilt 等)（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "MODRINTH_LOADER",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[Spiget/Modrinth] MODRINTH_MODPACK",
+            "description": "Modrinth モッドパックの slug / ID / ページ URL / mrpack の URL・パス（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "MODRINTH_MODPACK",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[Spiget/Modrinth] MODRINTH_MODPACK_VERSION_TYPE",
+            "description": "モッドパックのバージョン種別（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "MODRINTH_MODPACK_VERSION_TYPE",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:release,beta,alpha,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[Spiget/Modrinth] MODRINTH_VERSION",
+            "description": "モッドパックの特定バージョン ID/番号（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "MODRINTH_VERSION",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[Spiget/Modrinth] MODRINTH_IGNORE_MISSING_FILES",
+            "description": "欠落しても無視するファイルの glob（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "MODRINTH_IGNORE_MISSING_FILES",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[Spiget/Modrinth] MODRINTH_EXCLUDE_FILES",
+            "description": "除外するクライアント mod（部分一致 or /regex/）（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "MODRINTH_EXCLUDE_FILES",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[Spiget/Modrinth] MODRINTH_FORCE_INCLUDE_FILES",
+            "description": "強制的に含めるファイル（部分一致 or /regex/）（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "MODRINTH_FORCE_INCLUDE_FILES",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[Spiget/Modrinth] MODRINTH_FORCE_SYNCHRONIZE",
+            "description": "除外/追加の再評価を強制（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "MODRINTH_FORCE_SYNCHRONIZE",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:true,false,TRUE,FALSE,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[Spiget/Modrinth] MODRINTH_DEFAULT_EXCLUDE_INCLUDES",
+            "description": "同梱の既定 exclude/include。空にするには __EMPTY__ を指定（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "MODRINTH_DEFAULT_EXCLUDE_INCLUDES",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[Spiget/Modrinth] MODRINTH_OVERRIDES_EXCLUSIONS",
+            "description": "overrides から展開しないパス（ant 形式）（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "MODRINTH_OVERRIDES_EXCLUSIONS",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[CurseForge] CF_API_KEY",
+            "description": "CurseForge API キー（AUTO_CURSEFORGE 用）（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "CF_API_KEY",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[CurseForge] CF_API_KEY_FILE",
+            "description": "API キーが入ったファイルのパス（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "CF_API_KEY_FILE",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[CurseForge] CF_PAGE_URL",
+            "description": "モッドパック（またはファイル）のページ URL（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "CF_PAGE_URL",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[CurseForge] CF_SLUG",
+            "description": "モッドパックの slug（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "CF_SLUG",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[CurseForge] CF_FILE_ID",
+            "description": "ファイル ID（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "CF_FILE_ID",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[CurseForge] CF_FILENAME_MATCHER",
+            "description": "ファイル名の部分一致 or /regex/（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "CF_FILENAME_MATCHER",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[CurseForge] CF_EXCLUDE_INCLUDE_FILE",
+            "description": "exclude/include 定義の JSON（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "CF_EXCLUDE_INCLUDE_FILE",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[CurseForge] CF_EXCLUDE_MODS",
+            "description": "除外する mod の slug/ID（カンマ or スペース区切り）（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "CF_EXCLUDE_MODS",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[CurseForge] CF_FORCE_INCLUDE_MODS",
+            "description": "強制的に含める mod の slug/ID（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "CF_FORCE_INCLUDE_MODS",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[CurseForge] CF_FORCE_SYNCHRONIZE",
+            "description": "除外/追加の再評価を強制（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "CF_FORCE_SYNCHRONIZE",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:true,false,TRUE,FALSE,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[CurseForge] CF_SET_LEVEL_FROM",
+            "description": "LEVEL の決定元（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "CF_SET_LEVEL_FROM",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:WORLD_FILE,OVERRIDES,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[CurseForge] CF_PARALLEL_DOWNLOADS",
+            "description": "mod の並列ダウンロード数 (default: 4)（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "CF_PARALLEL_DOWNLOADS",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        },
+        {
+            "name": "[CurseForge] CF_OVERRIDES_SKIP_EXISTING",
+            "description": "既存ファイルを overrides で上書きしない（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "CF_OVERRIDES_SKIP_EXISTING",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|in:true,false,TRUE,FALSE,__EMPTY__",
+            "field_type": "text"
+        },
+        {
+            "name": "[CurseForge] CF_MOD_LOADER_VERSION",
+            "description": "モッドパック指定のローダーバージョンを上書き（空欄=未設定。空文字を設定したい場合は __EMPTY__）",
+            "env_variable": "CF_MOD_LOADER_VERSION",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|max:4096",
+            "field_type": "text"
+        }
+    ]
+}
