@@ -10,10 +10,10 @@
     "description": "itzg/minecraft-server をラッパーイメージ経由で動かす egg。itzg の環境変数を Panel から指定できる。",
     "features": null,
     "docker_images": {
-        "itzg wrapper (latest)": "ghcr.io/KiRura/itzg-ptero:latest",
-        "itzg wrapper (java21)": "ghcr.io/KiRura/itzg-ptero:java21",
-        "itzg wrapper (java17)": "ghcr.io/KiRura/itzg-ptero:java17",
-        "itzg wrapper (java8)": "ghcr.io/KiRura/itzg-ptero:java8"
+        "itzg wrapper (latest)": "ghcr.io/kirura/itzg-ptero:latest",
+        "itzg wrapper (java21)": "ghcr.io/kirura/itzg-ptero:java21",
+        "itzg wrapper (java17)": "ghcr.io/kirura/itzg-ptero:java17",
+        "itzg wrapper (java8)": "ghcr.io/kirura/itzg-ptero:java8"
     },
     "file_denylist": [],
     "startup": "/pterodactyl-entrypoint.sh",
