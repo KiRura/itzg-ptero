@@ -18,4 +18,4 @@ WORKDIR /home/container
 COPY pterodactyl-entrypoint.sh /pterodactyl-entrypoint.sh
 RUN chmod +x /pterodactyl-entrypoint.sh
 
-ENTRYPOINT ["/pterodactyl-entrypoint.sh"]
+ENTRYPOINT ["/home/container/pterodactyl-entrypoint.sh"]
