@@ -11,6 +11,7 @@
     "features": null,
     "docker_images": {
         "itzg wrapper (latest)": "ghcr.io/kirura/itzg-ptero:latest",
+        "itzg wrapper (java25)": "ghcr.io/kirura/itzg-ptero:java25",
         "itzg wrapper (java21)": "ghcr.io/kirura/itzg-ptero:java21",
         "itzg wrapper (java17)": "ghcr.io/kirura/itzg-ptero:java17",
         "itzg wrapper (java8)": "ghcr.io/kirura/itzg-ptero:java8"
